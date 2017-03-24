@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
                         stausText.setText("Puerta abierta");
                         statusImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_lock_open_outline_white_48dp));
                         statusView.setStatus(Status.ERROR);
+                        stickySwitch.setDirection(StickySwitch.Direction.RIGHT);
 
 
 
@@ -229,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
                         showNotificationStateRequest("Nueva notificacion", "Puerta cerrada");
                         stausText.setText("Puerta cerrada");
                         statusImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_lock_outline_white_48dp));
+                        stickySwitch.setDirection(StickySwitch.Direction.LEFT);
 
 
 
