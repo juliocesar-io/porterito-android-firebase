@@ -38,7 +38,7 @@
                 app:iconPadding="20dp"
                 app:iconSize="30dp"
                 app:leftIcon="@drawable/ic_glasses_white_48dp"
-                app:leftText="Portero"
+                app:leftText="Porterito"
                 app:rightIcon="@drawable/ic_camera_iris_white_48dp"
                 app:rightText="Captura"
                 app:selectedTextSize="15sp"
