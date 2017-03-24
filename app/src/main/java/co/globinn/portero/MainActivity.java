@@ -48,25 +48,29 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     // [END declare_database_ref]
 
+    StatusView statusView;
+
+    LoadingTextView dateText;
+    LoadingTextView titleText;
+    LoadingTextView sensorText;
+
     private Notification mNotification;
-
+    private String imgUrl;
+    private String proxString;
+    private String dateString;
     public static String TAG = "MainActivity";
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         mContext = getApplicationContext();
-
         mNotification = new Notification(this);
 
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
         .build();
         ImageLoader.getInstance().init(config);
-
 
         // [START initialize_database_ref]
         mDatabase = FirebaseDatabase.getInstance().getReference("sensor");
@@ -75,174 +79,65 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        final LoadingImageView ImgCapture = (LoadingImageView)findViewById(R.id.img_capture);
-
+        final LoadingImageView ImgCaptureView = (LoadingImageView)findViewById(R.id.img_capture);
         final StickySwitch stickySwitch = (StickySwitch) findViewById(R.id.sticky_switch);
-
-        final StatusView statusView = (StatusView) findViewById(R.id.status);
-
-
+        statusView = (StatusView) findViewById(R.id.status);
+        dateText = (LoadingTextView)findViewById(R.id.date_text);
+        titleText = (LoadingTextView)findViewById(R.id.title_img);
+        sensorText = (LoadingTextView)findViewById(R.id.sensor_status);
+        final View status = statusView.findViewById(R.id.status_container);
+        final TextView stausText = (TextView) statusView.findViewById(R.id.status_text);
+        final ImageView statusImg = (ImageView)   statusView.findViewById(R.id.icon_status);
         statusView.setStatus(Status.LOADING);
-
-
-
-
-
-
 
 
         final ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                Integer a = Integer.parseInt(dataSnapshot.child("btn_push").getValue().toString());
-                Integer b = Integer.parseInt(dataSnapshot.child("is_door_open").getValue().toString());
+                Integer is_timbre_push = Integer.parseInt(dataSnapshot.child("btn_push").getValue().toString());
+                Integer is_door_open = Integer.parseInt(dataSnapshot.child("is_door_open").getValue().toString());
 
-
-
-                String imageUri = dataSnapshot.child("photo_url").getValue().toString();
 
                 final String date = dataSnapshot.child("date").getValue().toString();
                 final String prox = dataSnapshot.child("proximity_cm").getValue().toString();
-
-                ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
-
+                final String photoURl = dataSnapshot.child("photo_url").getValue().toString();
 
 
-                DisplayImageOptions options = new DisplayImageOptions.Builder()
-                        .showImageForEmptyUri(R.drawable.ic_camera_iris_grey600_48dp) // resource or drawable
-                        .showImageOnFail(R.drawable.ic_camera_iris_grey600_48dp) // resource or drawable
-                        .build();
+                setImgUrl(photoURl, date, prox);
 
+                loadImageFormUrl(imgUrl,ImgCaptureView, date, prox);
 
-                imageLoader.displayImage(imageUri, ImgCapture, options, new ImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-
-                    }
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-                    }
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-
-                    }
-                    @Override
-                    public void onLoadingCancelled(String imageUri, View view) {
-
-                    }
-                }, new ImageLoadingProgressListener() {
-                    @Override
-                    public void onProgressUpdate(String imageUri, View view, int current, int total) {
-
-                    }
-                });
-
-                //LinearLayout relativeLayout = (LinearLayout) findViewById(R.id.asd);
-                //TextView text = (TextView) findViewById(R.id.textView);
-
-
-                final LoadingTextView dateText = (LoadingTextView)findViewById(R.id.date_text);
-                dateText.startLoading();
-
-
-                final LoadingTextView titleText = (LoadingTextView)findViewById(R.id.title_img);
-                titleText.startLoading();
-
-
-                final LoadingTextView sensorText = (LoadingTextView)findViewById(R.id.sensor_status);
-                sensorText.startLoading();
-
-
-                View status = statusView.findViewById(R.id.status_container);
-                TextView stausText = (TextView) statusView.findViewById(R.id.status_text);
-                ImageView statusImg = (ImageView)   statusView.findViewById(R.id.icon_status);
-
-
-
-                ImgCapture.startLoading();
-
-
-
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Do something after 5s = 5000ms
-
-                        dateText.stopLoading();
-                        titleText.stopLoading();
-                        sensorText.stopLoading();
-                        titleText.setText("Ultima Captura");
-                        sensorText.setText("Proximidad:" + " " + prox + "cm");
-                        dateText.setText(date);
-
-                        ImgCapture.stopLoading();
-                        //ImgCapture.setImageBitmap();
-                    }
-                }, 3000);
-
-
-
-
-                switch (a){
+                switch (is_timbre_push){
                     case 1:
-
-                        //relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                        //text.setText("Estado 1");
-
                         showNotificationStateRequest("Nueva notificacion", "Estado 1");
-
-                        //stickySwitch.setDirection(StickySwitch.Direction.RIGHT);
-
-
-
                         break;
 
                     case 0:
-                        //relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
-                        //text.setText("Estado 0");
                         showNotificationStateRequest("Nueva notificacion", "Estado 0");
-                        //stickySwitch.setDirection(StickySwitch.Direction.LEFT);
+                        break;
 
                 }
 
-                switch (b){
+                switch (is_door_open){
                     case 1:
-
-
                         showNotificationStateRequest("Nueva notificacion", "Puerta abierta");
                         status.setBackgroundColor(Color.parseColor("#FF5722"));
                         stausText.setText("Puerta abierta");
                         statusImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_lock_open_outline_white_48dp));
-                        statusView.setStatus(Status.ERROR);
                         stickySwitch.setDirection(StickySwitch.Direction.RIGHT);
-
-
-
-
+                        statusView.setStatus(Status.ERROR);
                         break;
 
                     case 0:
 
                         showNotificationStateRequest("Nueva notificacion", "Puerta cerrada");
+                        status.setBackgroundColor(Color.parseColor("#4CAF50"));
                         stausText.setText("Puerta cerrada");
                         statusImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_lock_outline_white_48dp));
                         stickySwitch.setDirection(StickySwitch.Direction.LEFT);
-
-
-
-
-
-                        status.setBackgroundColor(Color.parseColor("#4CAF50"));
-
                         statusView.setStatus(Status.ERROR);
-
-
-
-
+                        break;
                 }
             }
 
@@ -263,18 +158,62 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (direction.name()){
                     case "RIGHT":
-                        mDatabase.addValueEventListener(postListener);
-
+                        loadImageFormUrl(imgUrl,ImgCaptureView, dateString, proxString);
                         break;
                     case "LEFT":
-
-
+                        loadImageFormUrl(imgUrl,ImgCaptureView, dateString, proxString);
                         break;
 
                 }
             }
         });
 
+
+    }
+
+
+    private void loadImageFormUrl(String imageUri, final LoadingImageView ImgCaptureView, final String date, final String prox ){
+
+        ImgCaptureView.startLoading();
+        statusView.setStatus(Status.LOADING);
+
+
+        dateText.startLoading();
+        titleText.startLoading();
+        sensorText.startLoading();
+
+        ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.drawable.ic_camera_iris_grey600_48dp) // resource or drawable
+                .showImageOnFail(R.drawable.ic_camera_iris_grey600_48dp) // resource or drawable
+                .build();
+
+        imageLoader.displayImage(imageUri, ImgCaptureView, options);
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImgCaptureView.stopLoading();
+                statusView.setStatus(Status.ERROR);
+                dateText.stopLoading();
+                titleText.stopLoading();
+                sensorText.stopLoading();
+                titleText.setText("Ultima Captura");
+                sensorText.setText("Proximidad:" + " " + prox + "cm");
+                dateText.setText(date);
+
+            }
+        }, 1700);
+
+    }
+
+    private void setImgUrl(String url, String date, String prox){
+        imgUrl = url;
+        proxString = prox;
+        dateString = date;
 
     }
 
