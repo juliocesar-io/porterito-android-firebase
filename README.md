@@ -6,19 +6,17 @@ This app react to any value update in a firebase database for sensor data postin
 
 ### Database struture
 
-
-    {
-
-    "sensor" : {
-        "btn_push" : 0,
-        "date" : "2017/01/01 6:20 AM",
-        "is_door_open" : 1,
-        "photo_url" : "http://i.imgur.com/eShO8zH.jpg",
-        "proximity_cm" : 20
-    }
-
-    }
-
+```json
+{
+  "sensor" : {
+    "btn_push" : 0,
+    "date" : "2017/01/01 6:20 AM",
+    "is_door_open" : 1,
+    "photo_url" : "http://i.imgur.com/eShO8zH.jpg",
+    "proximity_cm" : 20
+  }
+}
+```
 
 
 ### Screens
