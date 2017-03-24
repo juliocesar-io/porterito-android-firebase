@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:background="#f9f7f9"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="co.globinn.portero.MainActivity">
+
+    <iammert.com.library.StatusView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:dismissOnComplete="false"
+        app:complete="@layout/status_loading_conection"
+        app:error="@layout/status_door_close"
+        app:loading="@layout/status_loading_conection"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="60dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <io.ghyeok.stickyswitch.widget.StickySwitch
+                android:id="@+id/sticky_switch"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                app:iconPadding="20dp"
+                app:iconSize="30dp"
+                app:leftIcon="@drawable/ic_glasses_white_48dp"
+                app:leftText="Portero"
+                app:rightIcon="@drawable/ic_camera_iris_white_48dp"
+                app:rightText="Captura"
+                app:selectedTextSize="15sp"
+                app:sliderBackgroundColor="#BDBDBD"
+                app:switchColor="@color/colorPrimaryDark"
+                app:textColor="#888"
+                app:textSize="15sp" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/captura"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="250dp">
+
+        <test.jinesh.loadingviews.LoadingTextView
+            android:layout_width="match_parent"
+            android:textColor="#888"
+            android:id="@+id/title_img"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <test.jinesh.loadingviews.LoadingImageView
+                android:id="@+id/img_capture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        android:layout_marginTop="450dp">
+
+
+        <test.jinesh.loadingviews.LoadingTextView
+            android:layout_width="match_parent"
+            android:textColor="#888"
+            android:id="@+id/sensor_status"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:layout_height="wrap_content" />
+
+
+        <test.jinesh.loadingviews.LoadingTextView
+            android:layout_width="match_parent"
+            android:textColor="#888"
+            android:id="@+id/date_text"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>
