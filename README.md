@@ -4,7 +4,7 @@ This app react to any value update in a firebase database for sensor data postin
 
 
 
-### Database struture
+### Database structure
 
 ```json
 {
